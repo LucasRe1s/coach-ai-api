@@ -2,12 +2,19 @@ import { routes } from "./routes";
 import Express from "express";
 import database from "./infra/config/config.database";
 import "dotenv/config";
+import cors from 'cors';
 
 const app = Express();
 
-import cors from 'cors';
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : '*';
 
-app.use(cors())
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true,
+}));
+
 routes(app);
 
 export default class Application {
