@@ -4,9 +4,6 @@ import { ErrorBase } from '../errors/base.error';
 import { ValidationError } from '../errors/validation.error';
 import { UnauthorizedError } from '../errors/unauthorized.error';
 import { NotFoundError } from '../errors/not-found.error';
-import { ForbiddenError } from '../errors/forbidden.error';
-import { DatabaseError } from '../errors/database.error';
-import { EmailAlreadyExistsError } from '../errors/email-already-exist.error';
 
 interface ErrorResponse {
     error: {
@@ -118,13 +115,11 @@ export const errorHandler = (
     const statusCode = getStatusCode(error);
     const errorResponse = buildErrorResponse(error, req, isDevelopment);
     
-    // Log do erro
     console.error(`[${new Date().toISOString()}] Error Handler:`);
     console.error(`Status: ${statusCode}`);
     console.error(`Message: ${error.message}`);
     console.error(`Stack: ${error.stack}`);
     
-    // Em desenvolvimento, incluir stack trace
     if (isDevelopment && error.stack) {
         (errorResponse.error as any).stack = error.stack;
     }
@@ -132,13 +127,11 @@ export const errorHandler = (
     res.status(statusCode).json(errorResponse);
 };
 
-// Middleware para capturar erros não tratados
 export const notFoundHandler = (req: Request, res: Response, next: NextFunction): void => {
     const error = new NotFoundError(`Rota ${req.method} ${req.originalUrl} não encontrada`);
     next(error);
 };
 
-// Middleware para capturar erros de sintaxe JSON
 export const jsonErrorHandler = (
     error: Error,
     req: Request,

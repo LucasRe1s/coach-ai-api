@@ -12,14 +12,11 @@ import {
 import { requestLogger, errorLogger } from "./middleware/logger.middleware";
 
 export const routes = (app: express.Express) => {
-  // Middlewares globais
   app.use(express.json({ limit: "5mb" }));
   app.use(requestLogger);
   
-  // Middleware para capturar erros de JSON
   app.use(jsonErrorHandler);
   
-  // Rotas
   app.use(healthRoute);
   app.use(authRoute);
   app.use(registerUserRoute);
@@ -30,7 +27,6 @@ export const routes = (app: express.Express) => {
   authenticatedRoutes.use(conversationRoute);
   app.use(authenticatedRoutes);
   
-  // Middlewares de erro (devem ser os últimos)
   app.use(notFoundHandler);
   app.use(errorLogger);
   app.use(errorHandler);

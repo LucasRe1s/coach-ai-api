@@ -18,14 +18,12 @@ export class AuthService {
     const { email, password } = payload;
     const hashedPassword = this.hashGenerator.generate(password);
 
-
     const user = await this.userService.retrieveByEmail(email);
     if (!user) {
       throw new Error("User not found or password is incorrect.");
     }
     console.log(user);
     console.log(hashedPassword);
-    
 
     if (hashedPassword !== user.password) {
       throw new Error("User not found or password is incorrect.");

@@ -4,7 +4,9 @@ import { servicesConfig } from "../../infra/config/services.config";
 export class GroqService {
   public async execute(query: any) {
     if (!servicesConfig.groq.enabled) {
-      throw new Error("Serviço Groq está desabilitado. Defina ENABLE_GROQ=true e GROQ_API_KEY para habilitar.");
+      throw new Error(
+        "Serviço Groq está desabilitado. Defina ENABLE_GROQ=true e GROQ_API_KEY para habilitar."
+      );
     }
 
     const completion = await groq.chat.completions.create({

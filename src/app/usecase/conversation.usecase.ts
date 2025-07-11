@@ -1,7 +1,6 @@
 import { ConversationService } from "../service/conversation.service";
 import { GroqService } from "../service/groq.service";
 import { OpenAIService } from "../service/openai.service";
-import { servicesConfig, hasAnyServiceEnabled } from "../../infra/config/services.config";
 
 export class ConversationUseCase {
   private service: ConversationService;
@@ -15,12 +14,10 @@ export class ConversationUseCase {
   }
 
   public async createMessage(message: string, userId: string, provider?: 'groq' | 'openai') {
-    const conversation = await this.service.createMessage(message, userId);
-    
     let answer: string;
-    
+
     try {
-      // Se provider foi especificado, tenta usar ele primeiro
+      // 1. Tenta obter a resposta da IA primeiro
       if (provider) {
         if (provider === 'openai') {
           answer = await this.openaiService.execute(message);
@@ -34,17 +31,17 @@ export class ConversationUseCase {
         try {
           answer = await this.openaiService.execute(message);
         } catch (error) {
-          console.log("OpenAI falhou, tentando Groq...");
           answer = (await this.groqService.execute(message)) ?? "Desculpe, não consegui processar sua pergunta.";
         }
       }
     } catch (error) {
-      console.error("Erro ao processar com IA:", error);
-      answer = "Desculpe, ocorreu um erro ao processar sua pergunta. Tente novamente mais tarde.";
+      // Se der erro em qualquer IA, lança um erro amigável (não salva nada)
+      throw new Error("Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente mais tarde.");
     }
-    
+
+    // 2. Só cria/salva a conversa se a IA respondeu com sucesso
+    const conversation = await this.service.createMessage(message, userId);
     const updatedConversation = await this.service.addMessageToConversation(conversation._id, answer, 'assistant');
-    
     return updatedConversation;
   }
 

@@ -1,6 +1,5 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-// Conversation
 const ConversationSchema = new Schema({
   title: { type: String },
   first_message: { type: String, required: true },
@@ -10,13 +9,13 @@ const ConversationSchema = new Schema({
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now },
   user_id: { type: String, required: true },
-  messages: [{
-    content: { type: String, required: true },
-    role: { type: String, enum: ['user', 'assistant'], required: true },
-    timestamp: { type: Date, default: Date.now }
-  }]
+  messages: [
+    {
+      content: { type: String, required: true },
+      role: { type: String, enum: ["user", "assistant"], required: true },
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
 });
 
-export const ConversationEntity = model('Conversation', ConversationSchema);
-
-
+export const ConversationEntity = model("Conversation", ConversationSchema);

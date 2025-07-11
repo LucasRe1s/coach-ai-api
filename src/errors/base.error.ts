@@ -11,7 +11,6 @@ export class ErrorBase extends Error {
         this.code = code || this.constructor.name;
         this.timestamp = new Date().toISOString();
         
-        // Garante que o stack trace seja preservado
         Error.captureStackTrace(this, this.constructor);
     }
 

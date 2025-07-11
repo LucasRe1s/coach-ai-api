@@ -12,6 +12,11 @@ export const UpdateUserSchema = z.object({
   email: z.string().optional(),
   password: z.string().optional(),
 });
+export const UserIdSchema = z.object({
+  params: z.object({
+    id: z.string().min(1, "ID é obrigatório")
+  })
+});
 
 export type UserProps = z.infer<typeof CreateUserSchema>;
 

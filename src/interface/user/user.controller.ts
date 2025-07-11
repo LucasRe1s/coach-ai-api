@@ -50,7 +50,7 @@ export class UserController {
       };
       const body = UpdateUserSchema.parse(unparsedBody);
       await this.usecase.update(id, body);
-      
+
       res.status(200).json({ message: "Usuário atualizado com sucesso" });
     } catch (error) {
       if (error instanceof Error) {
