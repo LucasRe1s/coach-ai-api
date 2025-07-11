@@ -5,6 +5,12 @@ import "dotenv/config";
 
 const app = Express();
 
+import cors from 'cors';
+
+app.use(cors({
+  origin: process.env.FRONT_END_URL || 'http://localhost:3000',
+}));
+
 app.use(Express.json());
 routes(app);
 
